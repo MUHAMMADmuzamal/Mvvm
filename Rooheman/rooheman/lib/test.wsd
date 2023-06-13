@@ -1,0 +1,203 @@
+@startuml mvvm
+set namespaceSeparator ::
+
+class "rooheman::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "rooheman::main.dart::MyApp"
+
+class "rooheman::models::client_model.dart::ClientModel" {
+  +int? id
+  +int? code
+  +PersonalInformation? personalInformation
+  +EducationDetails? educationDetails
+  +JobDetails? jobDetails
+  +ReligionDetails? religionDetails
+  +PropertyDetails? propertyDetails
+  +FamilyDetails? familyDetails
+  +Address? address
+  +YourRequirements? yourRequirements
+  +Map<String, dynamic> toJson()
+}
+
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::PersonalInformation"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::EducationDetails"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::JobDetails"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::ReligionDetails"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::PropertyDetails"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::FamilyDetails"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::Address"
+"rooheman::models::client_model.dart::ClientModel" o-- "rooheman::models::client_model.dart::YourRequirements"
+
+class "rooheman::models::client_model.dart::PersonalInformation" {
+  +String? gender
+  +String? name
+  +int? age
+  +String? maritalStatus
+  +String? divorcedReason
+  +double? height
+  +List<String>? images
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::EducationDetails" {
+  +String? qualification
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::JobDetails" {
+  +String? natureOfJob
+  +int? income
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::ReligionDetails" {
+  +String? religion
+  +String? caste
+  +String? sect
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::PropertyDetails" {
+  +String? homeOwnOnRent
+  +Size? size
+  +String? location
+  +String? otherPropertiesIfAny
+  +Map<String, dynamic> toJson()
+}
+
+"rooheman::models::client_model.dart::PropertyDetails" o-- "rooheman::models::client_model.dart::Size"
+
+class "rooheman::models::client_model.dart::Size" {
+  +String? unit
+  +double? value
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::FamilyDetails" {
+  +String? fatherOccupation
+  +String? motherOccupation
+  +int? siblings
+  +int? married
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::Address" {
+  +String? currentCity
+  +String? homeTown
+  +String? homeTownLocation
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::models::client_model.dart::YourRequirements" {
+  +int? ageLimit
+  +String? height
+  +String? city
+  +String? caste
+  +String? qualification
+  +String? anyOtherDemand
+  +Map<String, dynamic> toJson()
+}
+
+class "rooheman::repositories::clients::clients_fake.dart::ClientFadeData" {
+  +List<dynamic> fakeClientJsonList
+  +Future<List<ClientModel>> getAllClients()
+  +Future<ClientModel> getClientById()
+}
+
+"rooheman::repositories::clients::client_repository.dart::ClientsRepository" <|-- "rooheman::repositories::clients::clients_fake.dart::ClientFadeData"
+
+abstract class "rooheman::repositories::clients::client_repository.dart::ClientsRepository" {
+  +Future<List<ClientModel>> getAllClients()
+  +Future<ClientModel> getClientById()
+}
+
+class "rooheman::resources::theme::theme_manager.dart::ThemeManager" {
+  -ThemeMode _themeMode
+  +dynamic themeMode
+  +dynamic toggleTheme()
+}
+
+"rooheman::resources::theme::theme_manager.dart::ThemeManager" o-- "flutter::src::material::app.dart::ThemeMode"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "rooheman::resources::theme::theme_manager.dart::ThemeManager"
+
+class "rooheman::utilities::responsive.dart::Responsive" {
+  +Widget? mobileSmallScreen
+  +Widget mobileMediumScreen
+  +Widget? mobileLargeScreen
+  +Widget? tablet
+  +Widget laptopNormalScreen
+  +Widget? laptopLargeScreen
+  +Widget? largeScreen
+  {static} +bool isMobileSmallScreen()
+  {static} +bool isMobileMediumScreen()
+  {static} +bool isMobileLargeScreen()
+  {static} +bool isTablet()
+  {static} +bool isLaptopNormalScreen()
+  {static} +bool isLaptopLargeScreen()
+  {static} +bool isLargeScreen()
+  {static} +double returnValueAccordingToMobileScreens()
+  +Widget build()
+}
+
+"rooheman::utilities::responsive.dart::Responsive" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "rooheman::utilities::responsive.dart::Responsive"
+
+class "rooheman::views::home.dart::Home" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "rooheman::views::home.dart::Home"
+
+class "rooheman::view_models::clients_view_model.dart::ClientsViewModel" {
+  +ClientsRepository? clientsRepository
+  +Future<List<ClientViewModel>> fetchAllClients()
+}
+
+"rooheman::view_models::clients_view_model.dart::ClientsViewModel" o-- "rooheman::repositories::clients::client_repository.dart::ClientsRepository"
+
+class "rooheman::view_models::client_view_model.dart::ClientViewModel" {
+  +ClientModel? clientModel
+  +dynamic id
+  +dynamic code
+  +dynamic personalInformation
+  +dynamic educationDetails
+  +dynamic jobDetails
+  +dynamic religionDetails
+  +dynamic propertyDetails
+  +dynamic familyDetails
+  +dynamic address
+  +dynamic yourRequirements
+}
+
+"rooheman::view_models::client_view_model.dart::ClientViewModel" o-- "rooheman::models::client_model.dart::ClientModel"
+
+class "rooheman::widgets::custom_card.dart::CustomCard" {
+  +dynamic data
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "rooheman::widgets::custom_card.dart::CustomCard"
+
+class "rooheman::widgets::detail_view.dart::DetailView" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "rooheman::widgets::detail_view.dart::DetailView"
+
+class "rooheman::widgets::layout.dart::Layout" {
+  +dynamic child
+  +State<Layout> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "rooheman::widgets::layout.dart::Layout"
+
+class "rooheman::widgets::layout.dart::_LayoutState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "rooheman::widgets::layout.dart::_LayoutState"
+
+
+@enduml
